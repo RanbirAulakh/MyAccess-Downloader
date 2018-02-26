@@ -1,15 +1,15 @@
 import requests
 import os
 import re
+import sys
 from bs4 import BeautifulSoup
 from sys import platform
-from urllib.request import urlretrieve
 
 # it will create new folders in same directory as this script
 def createFolder(term, name):
 	cwd = os.getcwd() + "/" + term + "-Notes"
 	if not os.path.exists(cwd): 
-		print("Created a new folder: " + name)
+		print("Created a new folder: " + term + "-Notes")
 		os.makedirs(cwd)
 
 	cwd = os.getcwd() + "/" + term + "-Notes/" + name
@@ -17,18 +17,20 @@ def createFolder(term, name):
 		print("Created a new folder: " + name)
 		os.makedirs(cwd)
 
+userId = sys.argv[1]
+term = sys.argv[2]
 
 s = requests.session()
-r = s.post('https://myaccess.rit.edu/myAccess5/process_login.php', data={"un":"","pw":"", "signin":""})
+r = s.post('https://myaccess.rit.edu/myAccess5/process_login.php', data={"un":userId,"pw":"", "signin":""})
 c = (r.content)
 
 soup = BeautifulSoup(c, "html.parser")
 
-term = ""
+# term = ""
 
-for i in soup.findAll("span"):
-	if 'term' in i.attrs:
-		term = i.attrs['term']
+# for i in soup.findAll("span"):
+# 	if 'term' in i.attrs:
+# 		term = i.attrs['term']
 
 
 ajax_url = r'https://myaccess.rit.edu/myAccess5/home_ajax_classes.php?term=' + term
